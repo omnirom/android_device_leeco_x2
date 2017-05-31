@@ -29,14 +29,17 @@
 
 #include <private/android_filesystem_config.h>
 
+
 #define NO_ANDROID_FILESYSTEM_CONFIG_DEVICE_DIRS
- const struct fs_path_config android_device_files[] = {
+static const struct fs_path_config android_device_files[] = {
       // { 00755, AID_UID,     AID_GID,     (1ULL << CAPABILITY), "PATH_TO_BINARY" },
+      { 00755, AID_BLUETOOTH,      AID_BLUETOOTH,      (1ULL << CAP_BLOCK_SUSPEND), "system/bin/wcnss_filter" },
       { 00700, AID_RADIO,          AID_SHELL,          (1ULL << CAP_BLOCK_SUSPEND), "system/bin/qmuxd" },
       { 00755, AID_SYSTEM,         AID_SYSTEM,         (1ULL << CAP_NET_BIND_SERVICE), "system/bin/pm-service"},
       { 00755, AID_SYSTEM,         AID_SYSTEM,         (1ULL << CAP_NET_BIND_SERVICE), "system/bin/cnss-daemon"},
       { 00755, AID_SYSTEM,         AID_SYSTEM,         (1ULL << CAP_NET_BIND_SERVICE), "system/bin/imsdatadaemon" },
       { 00755, AID_SYSTEM,         AID_RADIO,          (1ULL << CAP_NET_BIND_SERVICE), "system/bin/ims_rtp_daemon" },
+      { 00755, AID_INPUT,          AID_SYSTEM,         (1ULL << CAP_SYS_NICE), "system/bin/gx_fpd"},
 #ifdef NO_ANDROID_FILESYSTEM_CONFIG_DEVICE_DIRS
       { 00000, AID_ROOT,      AID_ROOT,      0, "system/etc/fs_config_dirs" },
 #endif
