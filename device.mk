@@ -25,6 +25,16 @@ $(call inherit-product, vendor/leeco/x2/x2-vendor.mk)
 PRODUCT_PACKAGES += \
     omni_charger_res_images
 
+PRODUCT_PACKAGES += \
+    com.android.future.usb.accessory
+
+# Live Wallpapers
+PRODUCT_PACKAGES += \
+    LiveWallpapers \
+    LiveWallpapersPicker \
+    VisualizationWallpapers \
+    librs_jni
+
 # Device uses high-density artwork where available
 PRODUCT_AAPT_CONFIG := normal
 PRODUCT_AAPT_PREF_CONFIG := xxxhdpi
