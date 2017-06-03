@@ -27,3 +27,6 @@
 /system/bin/yep_qmi_server                                      u:object_r:yep_qmi_server_exec:s0
 
 /persist/qc_senseid(/.*)?                                       u:object_r:persist_qc_senseid_file:s0
+
+/sys/remote/enable                                              u:object_r:sysfs_ir_enable:s0
+/dev/ttyHSL1                                                    u:object_r:consumer_ir_device:s0
