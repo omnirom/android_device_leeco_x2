@@ -47,6 +47,10 @@ TARGET_SCREEN_WIDTH := 1440
 PRODUCT_COPY_FILES += \
     $(call find-copy-subdir-files,*,device/leeco/x2/rootdir/root,root)
 
+# Recovery fstab
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/rootdir/recovery/twrp.fstab:recovery/root/etc/twrp.fstab
+
 # Permissions
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.audio.low_latency.xml:system/etc/permissions/android.hardware.audio.low_latency.xml \
