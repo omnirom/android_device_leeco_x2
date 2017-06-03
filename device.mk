@@ -22,6 +22,9 @@ $(call inherit-product, frameworks/native/build/phone-xxhdpi-2048-hwui-memory.mk
 
 $(call inherit-product, vendor/leeco/x2/x2-vendor.mk)
 
+PRODUCT_PACKAGES += \
+    omni_charger_res_images
+
 # Device uses high-density artwork where available
 PRODUCT_AAPT_CONFIG := normal
 PRODUCT_AAPT_PREF_CONFIG := xxxhdpi
