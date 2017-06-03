@@ -68,6 +68,8 @@ TARGET_KERNEL_CONFIG := x2_defconfig
 
 # QCOM hardware
 BOARD_USES_QCOM_HARDWARE := true
+# Fix build on Jenkins
+BOARD_USES_VENDOR_QCOM := false
 
 # Disable secure discard because it's SLOW
 BOARD_SUPPRESS_SECURE_ERASE := true
