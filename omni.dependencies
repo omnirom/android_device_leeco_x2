@@ -1,6 +1,12 @@
 [
   {
     "remote": "omnirom",
+    "repository": "android_kernel_leeco_msm8996",
+    "target_path": "kernel/leeco/msm8996",
+    "revision": "android-7.1"
+  },
+  {
+    "remote": "omnirom",
     "repository": "android_hardware_qcom_display-caf-msm8996",
     "target_path": "hardware/qcom/display-caf-msm8996",
     "revision": "android-7.1"
