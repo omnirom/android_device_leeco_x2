@@ -39,7 +39,7 @@ on early-init
     mkdir /dsp 0771 media media
 
 on init
-    export LD_SHIM_LIBS "/system/bin/mm-qcamera-daemon|qcamera-daemon_shim.so:/system/vendor/lib64/lib-imsvt.so|libshims_ims.so"
+    export LD_SHIM_LIBS "/system/bin/mm-qcamera-daemon|qcamera-daemon_shim.so:/system/vendor/lib64/lib-imsvt.so|libshims_ims.so:/system/vendor/lib/libwvm.so|libwvm_shim.so"
 
     # Set permissions for persist partition
     mkdir /persist 0771 system system
