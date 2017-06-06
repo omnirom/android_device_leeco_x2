@@ -276,6 +276,10 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     libhealthd.msm8996
 
+# DeviceParts
+PRODUCT_PACKAGES += \
+    DeviceParts
+
 # QCom
 PRODUCT_PACKAGES += \
     tcmiface
