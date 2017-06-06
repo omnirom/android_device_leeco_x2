@@ -276,15 +276,6 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     libhealthd.msm8996
 
-
-# LePref settigs
-PRODUCT_PACKAGES += \
-    LePref
-
-# LePref Files
-PRODUCT_COPY_FILES += \
-    $(call find-copy-subdir-files,*,$(LOCAL_PATH)/lepref/files,/system/etc)
-
 # QCom
 PRODUCT_PACKAGES += \
     tcmiface
