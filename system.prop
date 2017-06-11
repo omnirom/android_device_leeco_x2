@@ -50,6 +50,7 @@ media.stagefright.enable-qcp=true
 media.stagefright.enable-fma2dp=true
 media.stagefright.enable-scan=true
 mmp.enable.3g2=true
+media.aac_51_output_enabled=true
 mm.enable.smoothstreaming=true
 mm.enable.qcom_parser=4194303
 persist.mm.enable.prefetch=true
@@ -76,7 +77,7 @@ audio.offload.pcm.16bit.enable=true
 audio.offload.pcm.24bit.enable=true
 audio.offload.track.enable=false
 audio.deep_buffer.media=true
-use.voice.path.for.pcm.voip=false
+use.voice.path.for.pcm.voip=true
 audio.offload.multiaac.enable=true
 audio.offload.gapless.enabled=true
 audio.safx.pbe.enabled=true
@@ -108,6 +109,9 @@ persist.camera.HAL3.enabled=1
 persist.camera.imglib.fddsp=1
 persist.camera.llc=1
 persist.camera.llnoise=1
+
+persist.camera.stats.test=5
+camera.disable_zsl_mode=1
 
 # Display power reduction (FOSS)
 ro.qcom.dpps.sensortype=3
@@ -247,7 +251,9 @@ persist.radio.REVERSE_QMI=0
 persist.radio.ROTATION_ENABLE=1
 
 # Build.prop tweaks
-persist.camera.capture.animate=1
-persist.camera.tintless=disable
-persist.camera.qcom.misc=1
-persist.hwc.dynamicfps=60
+qcom.hw.aac.encoder=true
+persist.dpm.feature=11
+#disable swap for dexpreopt
+dalvik.vm.dex2oat-swap=false
+# disable cache of extendedGenericSource
+av.debug.disable.pers.cache=true
