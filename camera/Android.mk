@@ -17,6 +17,16 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
+LOCAL_SRC_FILES := camera_shim.cpp
+LOCAL_MODULE := libcamera_shim
+LOCAL_MODULE_TAGS := optional
+LOCAL_32_BIT_ONLY := true
+LOCAL_MODULE_CLASS := SHARED_LIBRARIES
+
+include $(BUILD_SHARED_LIBRARY)
+
+include $(CLEAR_VARS)
+
 LOCAL_SRC_FILES := \
     bionic/bionic_time_conversions.cpp \
     bionic/pthread_cond.cpp
