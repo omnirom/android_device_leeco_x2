@@ -3,7 +3,6 @@ ro.config.product=x2
 ro.internal.model=Le X820
 ro.config.le_hardware_version=HW_1.0.0
 ro.le.mtpname=Le Max2
-persist.sys.le_fast_chrg_enable=1
 
 # Fingerprint
 persist.qfp=true
@@ -69,7 +68,6 @@ persist.audio.fluence.voicecall=true
 persist.audio.fluence.voicerec=true
 persist.audio.fluence.speaker=true
 tunnel.audio.encode=false
-media.aac_51_output_enabled=true
 audio.heap.size.multiplier=7
 audio.offload.buffer.size.kb=64
 audio.offload.video=true
