@@ -194,7 +194,9 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/gps/etc/izat.conf:system/etc/izat.conf \
     $(LOCAL_PATH)/gps/etc/lowi.conf:system/etc/lowi.conf \
     $(LOCAL_PATH)/gps/etc/sap.conf:system/etc/sap.conf \
-    $(LOCAL_PATH)/gps/etc/xtwifi.conf:system/etc/xtwifi.conf
+    $(LOCAL_PATH)/gps/etc/xtwifi.conf:system/etc/xtwifi.conf \
+    $(LOCAL_PATH)/configs/gps_certs/cacert_location.pem:system/etc/cacert_location.pem \
+    $(LOCAL_PATH)/configs/gps_certs/xtra_root_cert.pem:system/etc/xtra_root_cert.pem
 
 # IRQ
 PRODUCT_COPY_FILES += \
