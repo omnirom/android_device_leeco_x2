@@ -54,8 +54,6 @@
 /dev/graphics/*           0660   system     graphics
 /dev/goodix_fp            0666   system     system
 
-/sys/devices/platform/kcal_ctrl.0/* 0666 system system
-
 # permissions for CSVT
 /dev/smd11                0660   radio      radio
 

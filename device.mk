@@ -47,6 +47,10 @@ TARGET_SCREEN_WIDTH := 1440
 PRODUCT_COPY_FILES += \
     $(call find-copy-subdir-files,*,device/leeco/x2/rootdir/root,root)
 
+# Ramdisk
+PRODUCT_PACKAGES += \
+    init.power.sh
+
 # Recovery fstab
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/rootdir/recovery/twrp.fstab:recovery/root/etc/twrp.fstab

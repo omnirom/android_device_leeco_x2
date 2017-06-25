@@ -203,12 +203,6 @@ on boot
     mkdir /dev/socket/qmux_gps 0770 gps gps
     chmod 2770 /dev/socket/qmux_gps
 
-    mkdir /persist/drm 0770 system system
-    mkdir /persist/bluetooth 0770 bluetooth bluetooth
-    mkdir /persist/misc 0770 system system
-    mkdir /persist/alarm 0770 system system
-    mkdir /persist/time 0770 system system
-
     # Remove SUID bit for iproute2 ip tool
     chmod 0755 /system/bin/ip
 
@@ -317,7 +311,7 @@ on boot
     chmod 660 /sys/class/leds/green/start_idx
     chmod 660 /sys/class/leds/blue/start_idx
 
-    # quickset IR
+    #Quickset IR
     chown system system /sys/remote/enable
     chmod 0666 /sys/remote/enable
 
@@ -553,7 +547,7 @@ service thermal-engine /system/vendor/bin/thermal-engine
    writepid /dev/cpuset/system-background/tasks
 
 service time_daemon /system/bin/time_daemon
-   class main 
+   class late_start
    user root
    group root
    writepid /dev/cpuset/system-background/tasks
@@ -1023,7 +1017,7 @@ service ptt_ffbm /system/bin/ptt_socket_app -f -d
     oneshot
 
 service cnss_diag /system/bin/cnss_diag -q -f
-    class late_start
+    class main
     user root
     group root
     #ifdef VENDOR_EDIT
