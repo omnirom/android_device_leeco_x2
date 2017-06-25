@@ -114,6 +114,9 @@ PRODUCT_COPY_FILES += \
 
 PRODUCT_CHARACTERISTICS := nosdcard
 
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.sys.sdcardfs=true
+
 # Audio
 PRODUCT_PACKAGES += \
     audiod \
