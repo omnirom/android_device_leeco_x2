@@ -18,6 +18,7 @@
 package org.omnirom.device;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.ContentObserver;
 import android.os.Handler;
 import android.provider.Settings;
@@ -99,6 +100,11 @@ public class KeyHandler implements DeviceKeyHandler {
     @Override
     public boolean isCameraLaunchEvent(KeyEvent event) {
         return false;
+    }
+
+    @Override
+    public Intent isActivityLaunchEvent(KeyEvent event) {
+        return null;
     }
 }
 
