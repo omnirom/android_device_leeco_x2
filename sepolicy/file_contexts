@@ -26,10 +26,8 @@
 # Init
 /system/bin/init\.power\.sh                                         u:object_r:init_power_exec:s0
 
-/sys/devices/soc/qpnp-smbcharger-[0-9a-f]+/power_supply/battery/capacity u:object_r:sysfs_batteryinfo:s0
-/sys/devices/soc/qpnp-smbcharger-[0-9a-f]+/power_supply/battery/current_now u:object_r:sysfs_batteryinfo:s0
-/sys/devices/soc/qpnp-smbcharger-[0-9a-f]+/power_supply/battery/voltage_now u:object_r:sysfs_batteryinfo:s0
-/sys/devices/soc/qpnp-smbcharger-[0-9a-f]+/power_supply/battery/temp u:object_r:sysfs_batteryinfo:s0
+/sys/devices/soc/qpnp-smbcharger.*/power_supply/battery(/.*)?              u:object_r:sysfs_battery_supply:s0
+/sys/devices/soc/qpnp-smbcharger.*/power_supply/le_ab(/.*)?                u:object_r:sysfs_batteryinfo:s0
 
 # Vibrator config
 /sys/devices/virtual/timed_output/vibrator(/.*)?	u:object_r:sysfs_vibrator:s0
