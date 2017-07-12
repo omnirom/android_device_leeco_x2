@@ -175,6 +175,7 @@ BOARD_CHARGER_ENABLE_SUSPEND := true
 BOARD_CHARGER_DISABLE_INIT_BLANK := true
 # not really for recovery anymor... but healthd still uses it
 BOARD_USE_CUSTOM_RECOVERY_FONT := \"roboto_23x41.h\"
+HEALTHD_ENABLE_TRICOLOR_LED := true
 
 # power hal
 TARGET_PROVIDES_POWERHAL := true
