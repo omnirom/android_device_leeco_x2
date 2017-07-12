@@ -1,0 +1,3 @@
+type simalliance, domain;
+app_domain(simalliance)
+allow simalliance activity_service:service_manager find;
