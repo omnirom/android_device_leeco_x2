@@ -273,6 +273,10 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     sensors.msm8996
 
+PRODUCT_BOOT_JARS += \
+    qcnvitems \
+    qcrilhook
+
 # DeviceParts
 PRODUCT_PACKAGES += \
     DeviceParts
