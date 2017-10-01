@@ -927,6 +927,7 @@ void LocEngReportSv::proc() const {
                 }
             }
         }
+
         if (locEng->gnss_sv_status_cb != NULL) {
             LOC_LOGE("Calling gnss_sv_status_cb");
             locEng->gnss_sv_status_cb((GnssSvStatus*)&(gnssSvStatus));

@@ -1,4 +1,4 @@
-/* Copyright (c) 2011-2015, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2013, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -9,7 +9,7 @@
  *       copyright notice, this list of conditions and the following
  *       disclaimer in the documentation and/or other materials provided
  *       with the distribution.
- *     * Neither the name of The Linux Foundatoin, nor the names of its
+ *     * Neither the name of The Linux Foundation nor the names of its
  *       contributors may be used to endorse or promote products derived
  *       from this software without specific prior written permission.
  *
@@ -25,21 +25,11 @@
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
  * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef _GNSSPPS_H
-#define _GNSSPPS_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#ifndef _PLATFORM_LIB_INCLUDES_H_
+#define _PLATFORM_LIB_INCLUDES_H_
 
-/*  opens the device and fetches from PPS source */
-int initPPS(char *devname);
-/* updates the fine time stamp */
-int getPPS(struct timespec *current_ts, struct timespec *current_boottime, struct timespec *last_boottime);
-/* stops fetching and closes the device */
-void deInitPPS();
+#include "platform_lib_time.h"
+#include "platform_lib_macros.h"
 
-#ifdef __cplusplus
-}
-#endif
 #endif

@@ -1,4 +1,4 @@
-/* Copyright (c) 2011, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2013, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -24,27 +24,12 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
  * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
  */
 
-#ifndef LOC_API_V02_LOG_H
-#define LOC_API_V02_LOG_H
+#ifndef _PLATFORM_LIB_TIME_H_
+#define _PLATFORM_LIB_TIME_H_
 
-#ifdef __cplusplus
-extern "C"
-{
+int64_t systemTime(int clock);
+int64_t elapsedMillisSinceBoot();
+
 #endif
-
-#include <loc_log.h>
-#include <loc_api_v02_client.h>
-
-const char* loc_get_v02_event_name(uint32_t event);
-const char* loc_get_v02_client_status_name(locClientStatusEnumType status);
-const char* loc_get_v02_qmi_status_name(qmiLocStatusEnumT_v02 status);
-
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* LOC_API_V02_LOG_H */
