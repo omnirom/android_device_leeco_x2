@@ -420,6 +420,8 @@
     <integer name="config_bluetooth_operating_voltage_mv">3300</integer>
 
     <!-- Enable overlay for all location components. -->
+    <bool name="config_enableNetworkLocationOverlay" translatable="false">false</bool>
+    <bool name="config_enableFusedLocationOverlay" translatable="false">false</bool>
     <string name="config_networkLocationProviderPackageName" translatable="false">com.qualcomm.location</string>
     <string name="config_fusedLocationProviderPackageName" translatable="false">com.qualcomm.location</string>
 
@@ -429,7 +431,8 @@
         <item>"/system/framework/oat/arm64/services.odex"</item>
         <item>"/system/framework/arm64/boot.oat"</item>
         <item>"/system/framework/arm64/boot-core-libart.oat"</item>
-   </string-array>
+        <item>"/system/framework/arm64/boot-QPerformance.oat"</item>
+     </string-array>
 
     <!-- Should the pinner service pin the Camera application? -->
     <bool name="config_pinnerCameraApp">true</bool>
@@ -441,5 +444,9 @@
     <bool name="config_sustainedPerformanceModeSupported">true</bool>
 
     <bool name="config_fingerprintRemoveClientOnCancel">true</bool>
+
+    <!-- The duration (in milliseconds) that the radio will scan for a signal
+           when there's no network connection. If the scan doesn't timeout, use zero -->
+    <integer name="config_radioScanningTimeout">5000</integer>
 
 </resources>
