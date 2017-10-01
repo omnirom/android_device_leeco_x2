@@ -79,5 +79,3 @@
 /system/bin/yep_qmi_server                                      u:object_r:yep_qmi_server_exec:s0
 
 /persist/qc_senseid(/.*)?                                       u:object_r:persist_qc_senseid_file:s0
-
-/data/data/org.simalliance.openmobileapi.service/files(/.*)? u:object_r:dalvikcache_data_file:s0
