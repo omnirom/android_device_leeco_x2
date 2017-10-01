@@ -167,7 +167,9 @@ void vendor_load_properties() {
     }
 
     // Common properties
-    property_set("persist.radio.ignore_dom_time", "5");
+    property_set("persist.multisim.config", "dsds");
+    property_set("persist.radio.multisim.config", "dsds");
+    property_set("ro.telephony.default_network", "22,22");
 
     init_alarm_boot_properties();
 }
