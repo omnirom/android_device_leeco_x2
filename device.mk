@@ -262,6 +262,22 @@ PRODUCT_PACKAGES += \
     libxml2 \
     libprotobuf-cpp-full
 
+# Radio
+PRODUCT_PROPERTY_OVERRIDES += \
+    persist.radio.apm_sim_not_pwdn=1 \
+    persist.radio.sib16_support=1 \
+    persist.radio.custom_ecc=1 \
+    persist.radio.add_power_save=1
+
+# Roaming
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.com.android.dataroaming=false
+
+# FST Manager
+PRODUCT_PACKAGES += \
+    fstman \
+    fstman.ini
+
 # Sensors
 PRODUCT_PACKAGES += \
     sensors.msm8996
