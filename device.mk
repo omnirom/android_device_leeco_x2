@@ -232,14 +232,19 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     libmm-omxcore \
     libc2dcolorconvert \
+    libdivxdrmdecrypt \
     libextmedia_jni \
     libOmxAacEnc \
     libOmxAmrEnc \
     libOmxCore \
     libOmxEvrcEnc \
     libOmxQcelp13Enc \
+    libOmxSwVencMpeg4 \
     libOmxVdec \
+    libOmxVdecHevc \
     libOmxVenc \
+    libOmxVidcCommon \
+    libmm-omxcore \
     libstagefrighthw
 
 # Power
