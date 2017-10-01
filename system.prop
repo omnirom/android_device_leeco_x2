@@ -224,6 +224,9 @@ wifi.interface=wlan0
 # SSR
 persist.sys.ssr.restart_level=ALL_ENABLE
 
+# Fast Dormancy
+persist.env.fastdorm.enabled=true
+
 # Fastcharge
 persist.sys.le_fast_chrg_enable=1
 
