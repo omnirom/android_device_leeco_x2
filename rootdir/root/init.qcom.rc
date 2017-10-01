@@ -38,8 +38,11 @@ on early-init
     symlink /data/tombstones /tombstones
     mkdir /dsp 0771 media media
 
+    # Setup zram options
+    write /sys/block/zram0/comp_algorithm lz4
+
 on init
-    export LD_SHIM_LIBS "/system/lib/hw/camera.msm8996.so|libcamera_shim.so:/system/bin/mm-qcamera-daemon|qcamera-daemon_shim.so:/system/vendor/lib64/lib-imsvt.so|libshims_ims.so"
+    export LD_SHIM_LIBS "/system/lib/hw/camera.msm8996.so|libcamera_shim.so:/system/bin/mm-qcamera-daemon|qcamera-daemon_shim.so"
 
     # Set permissions for persist partition
     mkdir /persist 0771 system system
@@ -57,6 +60,15 @@ on init
 on fs
     wait /dev/block/bootdevice
     mount_all fstab.qcom
+
+on late-fs
+    # boot time fs tune
+    write /sys/block/sda/queue/iostats 0
+    write /sys/block/sda/queue/iosched/slice_idle 0
+    write /sys/block/sda/queue/read_ahead_kb 2048
+    write /sys/block/sda/queue/nr_requests 256
+    write /sys/block/dm-0/queue/read_ahead_kb 2048
+    write /sys/block/dm-1/queue/read_ahead_kb 2048
 
 on early-boot
     # set RLIMIT_MEMLOCK to 64MB
@@ -197,6 +209,9 @@ on boot
     mkdir /persist/alarm 0770 system system
     mkdir /persist/time 0770 system system
 
+    #enable camera read sensors data
+    setprop persist.camera.gyro.disable 0
+
     # Remove SUID bit for iproute2 ip tool
     chmod 0755 /system/bin/ip
 
@@ -305,6 +320,18 @@ on boot
     chmod 660 /sys/class/leds/green/start_idx
     chmod 660 /sys/class/leds/blue/start_idx
 
+    #Quickset IR
+    chown system system /sys/remote/enable
+    chmod 0666 /sys/remote/enable
+
+    # Don't reset entire SoC on individual subsystem crash
+    write /sys/bus/msm_subsys/devices/subsys0/restart_level "related"
+    write /sys/bus/msm_subsys/devices/subsys1/restart_level "related"
+    write /sys/bus/msm_subsys/devices/subsys2/restart_level "related"
+    write /sys/bus/msm_subsys/devices/subsys3/restart_level "related"
+    write /sys/bus/msm_subsys/devices/subsys4/restart_level "related"
+    write /sys/bus/msm_subsys/devices/subsys5/restart_level "related"
+
 on post-fs-data
     # msm specific files that need to be created on /data
     mkdir /data/tombstones 0771 system system
@@ -321,16 +348,14 @@ on post-fs-data
     mkdir /data/misc/qvop 0660 system system
     mkdir /data/misc/audio_pp 0771 media audio
 
-    # NFC
-    mkdir /data/nfc
-    mkdir /data/oemnvitems 0771 radio radio
-
     # Sensors
-    mkdir /persist/sensors 0775 system root
-    write /persist/sensors/sensors_settings 1
+    mkdir /data/misc/sensors
+    chmod 0775 /data/misc/sensors
+    chmod 0755 /persist/sensors
     chmod 0644 /persist/sensors/sensors_settings
+    chmod 0644 /persist/sensors/gyro_sensitity_cal
     chown system root /persist/sensors/sensors_settings
-    mkdir /data/misc/sensors 0775 system system
+    chown system root /persist/sensors/gyro_sensitity_cal
 
     # Create directories for Fingerprint
     mkdir /data/fpc_images 0770 system system
@@ -439,6 +464,9 @@ on post-fs-data
 
     setprop vold.post_fs_data_done 1
 
+    #Create a folder for SRS to be able to create a usercfg file
+    mkdir /data/data/media 0770 media media
+
     # Create FM dir for patchdownloader
     mkdir /data/misc/fm 0770 system system
     chmod 0770 /data/misc/fm
@@ -457,10 +485,6 @@ on post-fs-data
     rm /data/system/perfd/default_values
     start perfd
 
-    # NFC local data and nfcee xml storage
-    mkdir /data/nfc 0770 nfc nfc
-    mkdir /data/nfc/param 0770 nfc nfc
-
     #Create IOP  deamon related dirs
     mkdir /data/misc/iop 0770 root system
 
@@ -469,6 +493,10 @@ on post-fs-data
     chown radio radio /data/misc/radio/copy_complete
     chmod 0660 /data/misc/radio/copy_complete
 
+    # copy prebuilt qcril.db files always
+    copy /system/vendor/qcril.db /data/misc/radio/qcril_prebuilt.db
+    chown radio radio /data/misc/radio/qcril_prebuilt.db
+    chmod 0660 /data/misc/radio/qcril_prebuilt.db
     # File flags for prebuilt ril db file
     write /data/misc/radio/prebuilt_db_support 1
     chown radio radio /data/misc/radio/prebuilt_db_support
@@ -476,6 +504,18 @@ on post-fs-data
     write /data/misc/radio/db_check_done 0
     chown radio radio /data/misc/radio/db_check_done
     chmod 0660 /data/misc/radio/db_check_done
+
+    # qti-logkit data
+    mkdir /data/misc/qti-logkit/ 0771 system system
+    mkdir /data/misc/qti-logkit/shared-privileged/ 2770 system system
+    mkdir /data/misc/qti-logkit/shared-public/ 2770 system qcom_diag
+    mkdir /data/misc/qti-logkit/socket-privileged/ 2770 system system
+    mkdir /data/misc/qti-logkit/socket-public/ 2750 system qcom_diag
+    mkdir /data/misc/qti-logkit/logdata/ 2750 system shell
+
+    #Create SWAP related dirs
+    mkdir /data/system/swap 0770 root system
+    chmod 2770 /data/system/swap
 
 # start camera server as daemon
 service qcamerasvr /system/bin/mm-qcamera-daemon
@@ -567,6 +607,7 @@ service imsqmidaemon /system/bin/imsqmidaemon
     socket ims_qmid stream 0660 system radio
     group radio net_raw log diag
     writepid /dev/cpuset/system-background/tasks
+    disabled
 
 service imsdatadaemon /system/bin/imsdatadaemon
     class main
@@ -650,6 +691,12 @@ service fossctl /system/bin/ppd foss:on
 
 on property:sys.boot_completed=1
     start fossctl
+   # end boot time fs tune
+    write /sys/block/sda/queue/read_ahead_kb 128
+    write /sys/block/sda/queue/nr_requests 128
+    write /sys/block/dm-0/queue/read_ahead_kb 128
+    write /sys/block/dm-1/queue/read_ahead_kb 128
+    write /sys/block/sda/queue/iostats 1
 
 service tlocd /system/bin/tloc_daemon
     class late_start
@@ -698,11 +745,16 @@ on property:persist.sys.ssr.enable_ramdumps=0
 
 on property:sys.boot_completed=1
     write /dev/kmsg "Boot completed "
-    # Reset the read_ahead_kb to 512
-    write /sys/block/dm-0/queue/read_ahead_kb 512
 
     # CPE fw_name used by sound trigger HAL
     chown media audio /sys/kernel/wcd_cpe0/fw_name
+
+    # end boot time fs tune
+    write /sys/block/sda/queue/read_ahead_kb 2048
+    write /sys/block/sda/queue/nr_requests 2048
+    write /sys/block/dm-0/queue/read_ahead_kb 2048
+    write /sys/block/dm-1/queue/read_ahead_kb 2048
+    write /sys/block/sda/queue/iostats 1
 
 on property:persist.radio.atfwd.start=false
     stop atfwd
@@ -718,12 +770,6 @@ on property:persist.debug.trace=1
 on property:bluetooth.isEnabled=true
     start btwlancoex
     write /sys/class/bluetooth/hci0/idle_timeout 7000
-
-on property:bluetooth.sap.status=running
-    start bt-sap
-
-on property:bluetooth.sap.status=stopped
-    stop bt-sap
 
 on property:bluetooth.dun.status=running
     start bt-dun
@@ -783,7 +829,7 @@ on property:wc_transport.start_hci=false
 service start_hci_filter /system/bin/wcnss_filter
     class late_start
     user bluetooth
-    group bluetooth qcom_diag
+    group bluetooth qcom_diag system wakelock
     disabled
 
 service config_bt_addr /system/bin/btnvtool -O
@@ -813,6 +859,7 @@ service config_bt_addr /system/bin/btnvtool -O
 service config_bluetooth /system/bin/sh /system/etc/init.qcom.bt.sh "onboot"
     class core
     user root
+    seclabel u:r:bluetooth_loader:s0
     oneshot
 
 service hciattach /system/bin/sh /system/etc/init.qcom.bt.sh
@@ -821,6 +868,7 @@ service hciattach /system/bin/sh /system/etc/init.qcom.bt.sh
     group bluetooth net_bt_admin
     disabled
     oneshot
+    seclabel u:r:bluetooth_loader:s0
 
 on property:bluetooth.hciattach=true
     start hciattach
@@ -839,13 +887,6 @@ service bt-dun /system/bin/dun-server /dev/smd7 /dev/rfcomm0
     class late_start
     user bluetooth
     group bluetooth net_bt_admin inet
-    disabled
-    oneshot
-
-service bt-sap /system/bin/sapd 15
-    user bluetooth
-    group bluetooth net_bt_admin
-    class late_start
     disabled
     oneshot
 
@@ -928,24 +969,6 @@ service btwlancoex /system/bin/sh /system/etc/init.qcom.coex.sh
     class late_start
     user bluetooth
     group bluetooth net_bt_admin inet net_admin net_raw
-    disabled
-    oneshot
-
-service amp_init /system/bin/amploader -i
-    class late_start
-    user root
-    disabled
-    oneshot
-
-service amp_load /system/bin/amploader -l 7000
-    class late_start
-    user root
-    disabled
-    oneshot
-
-service amp_unload /system/bin/amploader -u
-    class late_start
-    user root
     disabled
     oneshot
 
@@ -1079,7 +1102,7 @@ service battery_monitor /system/bin/battery_monitor
     group system
     disabled
 
-service ril-daemon /system/bin/rild
+service_define ril-daemon /system/bin/rild
     class main
     socket rild stream 660 root radio
     socket sap_uim_socket1 stream 660 bluetooth bluetooth
@@ -1127,7 +1150,7 @@ service hcidump /system/bin/sh /system/etc/hcidump.sh
 
 service charger /sbin/healthd -c
     class charger
-    group log
+    group log system graphics
     seclabel u:r:healthd:s0
     writepid /dev/cpuset/system-background/tasks
 

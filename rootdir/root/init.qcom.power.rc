@@ -1,5 +1,11 @@
 on boot
     # Update foreground and background cpusets
+    trigger init-cpus
+    # Set permissions by node reads by dumpstate
+    chmod 0644 /sys/devices/system/cpu/present
+    chmod 0644 /sys/devices/system/cpu/online
+
+    # Update cpusets now that CPUs are up
     write /dev/cpuset/foreground/cpus 0-3
     write /dev/cpuset/foreground/boost/cpus 0-3
     write /dev/cpuset/background/cpus 0-3
@@ -19,6 +25,8 @@ on boot
     write /proc/sys/kernel/sched_boost 1
 
 on enable-low-power
+    # Enable all LPMs (this will enable C4, D4, D3, E4 and M3 LPMs)
+    write /sys/module/lpm_levels/parameters/sleep_disabled "N"
     # Disable thermal bcl hotplug to switch governor
     write /sys/module/msm_thermal/core_control/enabled 0
     write /sys/devices/soc/soc:qcom,bcl/mode "disable"
@@ -28,7 +36,9 @@ on enable-low-power
 
     # Enable Adaptive LMK
     write /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk 1
-    write /sys/module/lowmemorykiller/parameters/vmpressure_file_min 81250
+    write /sys/module/lowmemorykiller/parameters/adj "0,58,176,294,411,1000"
+    write /sys/module/lowmemorykiller/parameters/minfree "19352,29028,58056,135464,145140"
+    write /sys/module/lowmemorykiller/parameters/vmpressure_file_min 159375
 
     # Configure governor settings for little cluster
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "interactive"
@@ -72,18 +82,16 @@ on enable-low-power
     write /sys/devices/soc/soc:qcom,bcl/hotplug_soc_mask 8
     write /sys/devices/soc/soc:qcom,bcl/mode "enable"
 
-    # Input boost configuration
-    write /sys/module/cpu_boost/parameters/input_boost_freq "0:1324800 2:1324800"
-    write /sys/module/cpu_boost/parameters/input_boost_ms 40
-
     # Setting b.L scheduler parameters
     write /proc/sys/kernel/sched_boost 0
-    write /proc/sys/kernel/sched_downmigrate 90
-    write /proc/sys/kernel/sched_upmigrate 95
+    write /proc/sys/kernel/sched_migration_fixup 1
+    write /proc/sys/kernel/sched_downmigrate 80
+    write /proc/sys/kernel/sched_upmigrate 90
     write /proc/sys/kernel/sched_freq_inc_notify 400000
     write /proc/sys/kernel/sched_freq_dec_notify 400000
-    write /proc/sys/kernel/sched_spill_nr_run 3
+    write /proc/sys/kernel/sched_spill_nr_run 6
     write /proc/sys/kernel/sched_init_task_load 100
+    write /proc/sys/kernel/sched_upmigrate_min_nice 9
 
     # Enable bus-dcvs
     write /sys/class/devfreq/soc:qcom,cpubw/governor "bw_hwmon"
@@ -115,6 +123,11 @@ on enable-low-power
     # Starting io prefetcher service
     start iop
 
+    # Disable input boost
+    write /sys/module/cpu_boost/parameters/input_boost_enabled 0
+    write /sys/module/cpu_boost/parameters/input_boost_ms 0
+    write /sys/module/cpu_boost/parameters/input_boost_freq "0:0 1:0 2:0 3:0"
+
 on charger
     write /sys/devices/system/cpu/cpu1/online 0
     write /sys/devices/system/cpu/cpu2/online 0
@@ -122,6 +135,8 @@ on charger
     write /sys/module/msm_thermal/core_control/cpus_offlined 14
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "powersave"
     write /sys/module/lpm_levels/parameters/sleep_disabled 0
+    wait /dev/block/bootdevice
+    start hvdcp_opti
 
 on class_start:late_start
     trigger enable-low-power
@@ -133,7 +148,33 @@ on property:dev.bootcomplete=1
     setprop sys.io.scheduler "maple"
     # update cpusets now that boot is complete and we want better load balancing
     write /dev/cpuset/top-app/cpus 0-3
-    write /dev/cpuset/foreground/boost/cpus 0-2
-    write /dev/cpuset/foreground/cpus 0-2
-    write /dev/cpuset/background/cpus 0
-    write /dev/cpuset/system-background/cpus 0-1
+    write /dev/cpuset/foreground/boost/cpus 0-3
+    write /dev/cpuset/foreground/cpus 0-3
+    write /dev/cpuset/background/cpus 0-3
+    write /dev/cpuset/system-background/cpus 0-3
+
+# Kernel tuning
+    write /proc/sys/net/ipv4/tcp_congestion_control "westwood"
+
+    write /sys/module/msm_thermal/core_control/enabled 0
+    write /sys/module/msm_thermal/parameters/enabled Y
+    write /sys/kernel/mm/ksm/run 0
+
+# VM
+    write /proc/sys/vm/dirty_ratio 95
+    write /proc/sys/vm/dirty_background_ratio 85
+    write /proc/sys/vm/dirty_expire_centisecs 10
+    write /proc/sys/vm/swappiness 5
+    write /proc/sys/vm/vfs_cache_pressure 5
+#    write /sys/block/zram0/disksize 283115520
+#    mkswap /dev/block/zram0 > /dev/null 2>&1
+#    swapon /dev/block/zram0 > /dev/null 2>&1
+    swapoff /dev/block/zram0 > /dev/null 2>&1
+    write /sys/block/zram0/reset 1
+
+    # Set permissions for dumpstate nodes
+    chmod 0644 /d/rpm_stats
+    chmod 0644 /d/dpm_master_stats
+
+on property:init.svc.recovery=running
+    trigger enable-low-power
