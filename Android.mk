@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2016 The CyanogenMod Project
+# Copyright (C) 2017 The LineageOS Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,15 +14,6 @@
 # limitations under the License.
 #
 
-# This contains the module build definitions for the hardware-specific
-# components for this device.
-#
-# As much as possible, those components should be built unconditionally,
-# with device-specific names to avoid collisions, to avoid device-specific
-# bitrot and build breakages. Building a component unconditionally does
-# *not* include it on all devices, so it is safe even with hardware-specific
-# components.
-
 LOCAL_PATH := $(call my-dir)
 
 ifeq ($(TARGET_DEVICE),x2)
@@ -31,25 +22,6 @@ include $(call all-makefiles-under,$(LOCAL_PATH))
 
 include $(CLEAR_VARS)
 
-FIDOTAP_IMAGES := fidotap.b00 fidotap.b01 fidotap.b02 fidotap.b03 fidotap.b04 fidotap.b05 fidotap.b06 fidotap.mdt
-FIDOTAP_SYMLINKS := $(addprefix $(TARGET_OUT_ETC)/firmware/,$(notdir $(FIDOTAP_IMAGES)))
-$(FIDOTAP_SYMLINKS): $(LOCAL_INSTALLED_MODULE)
-	@echo "FIDOTAP firmware link: $@"
-	@mkdir -p $(dir $@)
-	@rm -rf $@
-	$(hide) ln -sf /firmware/image/$(notdir $@) $@
-
-ALL_DEFAULT_INSTALLED_MODULES += $(FIDOTAP_SYMLINKS)
-
-GOODIXFP_IMAGES := goodixfp.b00 goodixfp.b01 goodixfp.b02 goodixfp.b03 goodixfp.b04 goodixfp.b05 goodixfp.b06 goodixfp.mdt
-GOODIXFP_SYMLINKS := $(addprefix $(TARGET_OUT_ETC)/firmware/,$(notdir $(GOODIXFP_IMAGES)))
-$(GOODIXFP_SYMLINKS): $(LOCAL_INSTALLED_MODULE)
-	@echo "GOODIXFP firmware link: $@"
-	@mkdir -p $(dir $@)
-	@rm -rf $@
-	$(hide) ln -sf /firmware/image/$(notdir $@) $@
-
-ALL_DEFAULT_INSTALLED_MODULES += $(GOODIXFP_SYMLINKS)
 
 IMS_LIBS := libimscamera_jni.so libimsmedia_jni.so
 IMS_SYMLINKS := $(addprefix $(TARGET_OUT_VENDOR_APPS)/ims/lib/arm64/,$(notdir $(IMS_LIBS)))
@@ -61,6 +33,29 @@ $(IMS_SYMLINKS): $(LOCAL_INSTALLED_MODULE)
 
 ALL_DEFAULT_INSTALLED_MODULES += $(IMS_SYMLINKS)
 
+
+#ADSP_IMAGES := adsp.b00 adsp.b01 adsp.b02 adsp.b03 adsp.b04 adsp.b05 adsp.b06 adsp.b08 adsp.b09 adsp.mdt
+#ADSP_SYMLINKS := $(addprefix $(TARGET_OUT_ETC)/firmware/,$(notdir $(ADSP_IMAGES)))
+#$(ADSP_SYMLINKS): $(LOCAL_INSTALLED_MODULE)
+#	@echo "ADSP firmware link: $@"
+#	@mkdir -p $(dir $@)
+#	@rm -rf $@
+#	$(hide) ln -sf /firmware/image/$(notdir $@) $@
+#
+#ALL_DEFAULT_INSTALLED_MODULES += $(ADSP_SYMLINKS)
+
+
+FIDOTAP_IMAGES := fidotap.b00 fidotap.b01 fidotap.b02 fidotap.b03 fidotap.b04 fidotap.b05 fidotap.b06 fidotap.mdt
+FIDOTAP_SYMLINKS := $(addprefix $(TARGET_OUT_ETC)/firmware/,$(notdir $(FIDOTAP_IMAGES)))
+$(FIDOTAP_SYMLINKS): $(LOCAL_INSTALLED_MODULE)
+	@echo "FIDOTAP firmware link: $@"
+	@mkdir -p $(dir $@)
+	@rm -rf $@
+	$(hide) ln -sf /firmware/image/$(notdir $@) $@
+
+ALL_DEFAULT_INSTALLED_MODULES += $(FIDOTAP_SYMLINKS)
+
+
 MDTP_IMAGES := mdtp.b00 mdtp.b01 mdtp.b02 mdtp.b03 mdtp.b04 mdtp.b05 mdtp.b06 mdtp.mdt
 MDTP_SYMLINKS := $(addprefix $(TARGET_OUT_ETC)/firmware/,$(notdir $(MDTP_IMAGES)))
 $(MDTP_SYMLINKS): $(LOCAL_INSTALLED_MODULE)
@@ -71,29 +66,26 @@ $(MDTP_SYMLINKS): $(LOCAL_INSTALLED_MODULE)
 
 ALL_DEFAULT_INSTALLED_MODULES += $(MDTP_SYMLINKS)
 
-RFS_MSM_ADSP_SYMLINKS := $(TARGET_OUT)/rfs/msm/adsp/
-$(RFS_MSM_ADSP_SYMLINKS): $(LOCAL_INSTALLED_MODULE)
-	@echo "Creating RFS MSM ADSP folder structure: $@"
-	@rm -rf $@/*
-	@mkdir -p $(dir $@)/readonly
-	$(hide) ln -sf /data/tombstones/lpass $@/ramdumps
-	$(hide) ln -sf /persist/rfs/msm/adsp $@/readwrite
-	$(hide) ln -sf /persist/rfs/shared $@/shared
-	$(hide) ln -sf /persist/hlos_rfs/shared $@/hlos
-	$(hide) ln -sf /firmware $@/readonly/firmware
 
-RFS_MSM_MPSS_SYMLINKS := $(TARGET_OUT)/rfs/msm/mpss/
-$(RFS_MSM_MPSS_SYMLINKS): $(LOCAL_INSTALLED_MODULE)
-	@echo "Creating RFS MSM MPSS folder structure: $@"
-	@rm -rf $@/*
-	@mkdir -p $(dir $@)/readonly
-	$(hide) ln -sf /data/tombstones/modem $@/ramdumps
-	$(hide) ln -sf /persist/rfs/msm/mpss $@/readwrite
-	$(hide) ln -sf /persist/rfs/shared $@/shared
-	$(hide) ln -sf /persist/hlos_rfs/shared $@/hlos
-	$(hide) ln -sf /firmware $@/readonly/firmware
+GOODIXFP_IMAGES := goodixfp.b00 goodixfp.b01 goodixfp.b02 goodixfp.b03 goodixfp.b04 goodixfp.b05 goodixfp.b06 goodixfp.mdt
+GOODIXFP_SYMLINKS := $(addprefix $(TARGET_OUT_ETC)/firmware/,$(notdir $(GOODIXFP_IMAGES)))
+$(GOODIXFP_SYMLINKS): $(LOCAL_INSTALLED_MODULE)
+	@echo "GOODIXFP firmware link: $@"
+	@mkdir -p $(dir $@)
+	@rm -rf $@
+	$(hide) ln -sf /firmware/image/$(notdir $@) $@
 
-ALL_DEFAULT_INSTALLED_MODULES += $(RFS_MSM_ADSP_SYMLINKS) $(RFS_MSM_MPSS_SYMLINKS)
+ALL_DEFAULT_INSTALLED_MODULES += $(GOODIXFP_SYMLINKS)
+
+
+MSADP_SYMLINKS := $(TARGET_OUT_ETC)/firmware/msadp
+$(MSADP_SYMLINKS): $(LOCAL_INSTALLED_MODULE)
+	@echo "MSADP links"
+	@rm -rf $(TARGET_OUT_ETC)/firmware/msadp
+	@mkdir -p $(TARGET_OUT_ETC)/firmware
+	$(hide) ln -sf /dev/block/bootdevice/by-name/msadp $(TARGET_OUT_ETC)/firmware/msadp
+
+ALL_DEFAULT_INSTALLED_MODULES += $(MSADP_SYMLINKS)
 
 WCNSS_INI_SYMLINK := $(TARGET_OUT_ETC)/firmware/wlan/qca_cld/WCNSS_qcom_cfg.ini
 $(WCNSS_INI_SYMLINK): $(LOCAL_INSTALLED_MODULE)
@@ -110,5 +102,7 @@ $(WCNSS_MAC_SYMLINK): $(LOCAL_INSTALLED_MODULE)
 	$(hide) ln -sf /persist/$(notdir $@) $@
 
 ALL_DEFAULT_INSTALLED_MODULES += $(WCNSS_INI_SYMLINK) $(WCNSS_MAC_SYMLINK)
+
+include device/leeco/x2/tftp.mk
 
 endif
