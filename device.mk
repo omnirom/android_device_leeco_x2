@@ -47,16 +47,9 @@ TARGET_SCREEN_WIDTH := 1440
 PRODUCT_COPY_FILES += \
     $(call find-copy-subdir-files,*,device/leeco/x2/rootdir/root,root)
 
-# Ramdisk
-PRODUCT_PACKAGES += \
-    init.power.sh
-
 # Recovery fstab
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/rootdir/recovery/twrp.fstab:recovery/root/etc/twrp.fstab
-
-# QPerformance
-PRODUCT_BOOT_JARS += QPerformance
 
 # Permissions
 PRODUCT_COPY_FILES += \
@@ -141,9 +134,7 @@ PRODUCT_COPY_FILES += \
 
 # Camera
 PRODUCT_PACKAGES += \
-    SnapdragonCamera \
-    libstlport
-
+    SnapdragonCamera
 # Shims
 PRODUCT_PACKAGES += \
     libcamera_shim \
