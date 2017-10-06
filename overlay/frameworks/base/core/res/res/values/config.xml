@@ -28,22 +28,17 @@
          Zone N + 1     array[N] <= LUX < infinity
          Must be overridden in platform specific overlays -->
     <integer-array name="config_autoBrightnessLevels">
-        <item>1</item>        <!-- pitch black -->
+        <item>4</item>
         <item>5</item>
-        <item>9</item>
-        <item>14</item>
-        <item>25</item>       <!-- twilight -->
-        <item>50</item>       <!-- dim indoor -->
-        <item>100</item>      <!-- home -->
-        <item>200</item>
-        <item>300</item>      <!-- office -->
-        <item>500</item>      <!-- sunrise -->
-        <item>750</item>
-        <item>1000</item>     <!-- overcast -->
-        <item>2000</item>
-        <item>5000</item>
-        <item>10000</item>    <!-- daylight -->
-        <item>20000</item>
+        <item>8</item>
+        <item>12</item>
+        <item>60</item>
+        <item>450</item>
+        <item>800</item>
+        <item>1400</item>
+        <item>2600</item>
+        <item>8000</item>
+        <item>16000</item>
     </integer-array>
 
     <!-- Array of output values for LCD backlight corresponding to the LUX values
@@ -51,23 +46,18 @@
          than the size of the config_autoBrightnessLevels array.
          This must be overridden in platform specific overlays -->
     <integer-array name="config_autoBrightnessLcdBacklightValues">
+        <item>2</item>
         <item>3</item>
         <item>5</item>
-        <item>7</item>
+        <item>6</item>
+        <item>8</item>
         <item>10</item>
-        <item>16</item>
-        <item>25</item>
-        <item>35</item>
-        <item>47</item>
+        <item>20</item>
+        <item>27</item>
+        <item>44</item>
+        <item>64</item>
         <item>75</item>
-        <item>114</item>
-        <item>130</item>
-        <item>152</item>
-        <item>175</item>
-        <item>200</item>
-        <item>215</item>
-        <item>235</item>
-        <item>255</item>
+        <item>95</item>
     </integer-array>
 
     <!-- If this is true, the screen will fade off. -->
