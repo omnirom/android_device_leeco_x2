@@ -71,6 +71,8 @@
 /* RPM runs at 19.2Mhz. Divide by 19200 for msec */
 #define RPM_CLK 19200
 
+#define DOUBLE_TAP_FILE "/proc/touchpanel/double_tap_enable"
+
 const char *parameter_names[] = {
     "vlow_count",
     "accumulated_vlow_time",
@@ -104,6 +106,8 @@ static pthread_mutex_t s_interaction_lock = PTHREAD_MUTEX_INITIALIZER;
 static struct timespec s_previous_boost_timespec;
 static int s_previous_duration;
 
+static int interaction_enabled = 1;
+
 static struct hw_module_methods_t power_module_methods = {
     .open = NULL,
 };
@@ -114,6 +118,7 @@ static void power_init(struct power_module *module)
 
     int fd;
     char buf[10] = {0};
+    char prop[PATH_MAX] = {0};
 
     fd = open("/sys/devices/soc0/soc_id", O_RDONLY);
     if (fd >= 0) {
@@ -122,11 +127,17 @@ static void power_init(struct power_module *module)
         } else {
             int soc_id = atoi(buf);
             if (soc_id == 194 || (soc_id >= 208 && soc_id <= 218) || soc_id == 178) {
+                // not used
                 display_boost = 1;
             }
         }
         close(fd);
     }
+
+    if (property_get("ro.power.interactive_enabled", prop, NULL)) {
+        interaction_enabled = atoi(prop);
+    }
+    ALOGI("QCOM power HAL interactive_enabled = %d", interaction_enabled);
 }
 
 static void process_video_decode_hint(void *metadata)
@@ -413,6 +424,10 @@ static void power_hint(struct power_module *module, power_hint_t hint,
         {
             char governor[80];
 
+            if (interaction_enabled == 0) {
+                return;
+            }
+
             if (get_scaling_governor(governor, sizeof(governor)) == -1) {
                 ALOGE("Can't obtain scaling governor.");
                 return;
@@ -423,10 +438,8 @@ static void power_hint(struct power_module *module, power_hint_t hint,
                 pthread_mutex_unlock(&s_interaction_lock);
                 return;
             }
-            pthread_mutex_unlock(&s_interaction_lock);
 
-
-            int duration = 1500; // 1.5s by default
+            int duration = 1000; // 1s by default
             if (data) {
                 int input_duration = *((int*)data) + 750;
                 if (input_duration > duration) {
@@ -437,7 +450,6 @@ static void power_hint(struct power_module *module, power_hint_t hint,
             struct timespec cur_boost_timespec;
             clock_gettime(CLOCK_MONOTONIC, &cur_boost_timespec);
 
-            pthread_mutex_lock(&s_interaction_lock);
             long long elapsed_time = calc_timespan_us(s_previous_boost_timespec, cur_boost_timespec);
             // don't hint if previous hint's duration covers this hint's duration
             if ((s_previous_duration * 1000) > (elapsed_time + duration * 1000)) {
@@ -446,18 +458,19 @@ static void power_hint(struct power_module *module, power_hint_t hint,
             }
             s_previous_boost_timespec = cur_boost_timespec;
             s_previous_duration = duration;
-            pthread_mutex_unlock(&s_interaction_lock);
 
             // Scheduler is EAS.
-            if (true || strncmp(governor, SCHED_GOVERNOR, strlen(SCHED_GOVERNOR)) == 0) {
+            if (strncmp(governor, SCHED_GOVERNOR, strlen(SCHED_GOVERNOR)) == 0) {
                 // Setting the value of foreground schedtune boost to 50 and
-                // scaling_min_freq to 1100MHz.
-                int resources[] = {0x40800000, 1100, 0x40800100, 1100, 0x42C0C000, 0x32, 0x41800000, 0x33};
+                // scaling_min_freq to 1000MHz.
+                int resources[] = {0x40800000, 1000, 0x40800100, 1000, 0x42C0C000, 0x32, 0x41800000, 0x33};
                 interaction(duration, sizeof(resources)/sizeof(resources[0]), resources);
             } else { // Scheduler is HMP.
+                // scaling_min_freq to 1000MHz
                 int resources[] = {0x41800000, 0x33, 0x40800000, 1000, 0x40800100, 1000, 0x40C00000, 0x1};
                 interaction(duration, sizeof(resources)/sizeof(resources[0]), resources);
             }
+            pthread_mutex_unlock(&s_interaction_lock);
         }
         break;
         case POWER_HINT_VIDEO_ENCODE:
@@ -799,6 +812,13 @@ static int get_platform_low_power_stats(struct power_module *module,
     return 0;
 }
 
+void set_feature(struct power_module __unused *module, feature_t feature, int state) {
+    if (feature == POWER_FEATURE_DOUBLE_TAP_TO_WAKE) {
+        ALOGI("%s POWER_FEATURE_DOUBLE_TAP_TO_WAKE %s", __func__, (state ? "ON" : "OFF"));
+        sysfs_write(DOUBLE_TAP_FILE, state ? "1" : "0");
+    }
+}
+
 struct power_module HAL_MODULE_INFO_SYM = {
     .common = {
         .tag = HARDWARE_MODULE_TAG,
@@ -815,5 +835,6 @@ struct power_module HAL_MODULE_INFO_SYM = {
     .setInteractive = set_interactive,
     .get_number_of_platform_modes = get_number_of_platform_modes,
     .get_platform_low_power_stats = get_platform_low_power_stats,
-    .get_voter_list = get_voter_list
+    .get_voter_list = get_voter_list,
+    .setFeature = set_feature
 };
