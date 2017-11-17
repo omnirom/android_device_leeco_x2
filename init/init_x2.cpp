@@ -28,14 +28,17 @@
    IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <stdlib.h>
+
+#include <cstdlib>
 #include <unistd.h>
 #include <fcntl.h>
+#define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
+#include <sys/_system_properties.h>
 
-#include "vendor_init.h"
+#include <android-base/properties.h>
+
 #include "property_service.h"
-#include "log.h"
-#include "util.h"
+#include "vendor_init.h"
 
 #define DEVINFO_FILE "/dev/block/bootdevice/by-name/devinfo"
 
@@ -48,7 +51,6 @@ static int read_file2(const char *fname, char *data, int max_size)
 
     fd = open(fname, O_RDONLY);
     if (fd < 0) {
-        ERROR("failed to open '%s'\n", fname);
         return 0;
     }
 
@@ -143,7 +145,7 @@ void vendor_load_properties() {
         property_set("ro.product.model", "LEX820");
         //property_set("persist.data.iwlan.enable", "false");
         // Dual SIM
-        //property_set("persist.radio.multisim.config", "dsds");
+        property_set("persist.radio.multisim.config", "dsds");
         // Disable VoLTE
         //property_set("persist.radio.cs_srv_type", "1");
         //property_set("persist.radio.calls.on.ims", "0");
@@ -168,6 +170,7 @@ void vendor_load_properties() {
 
     // Common properties
     property_set("persist.radio.ignore_dom_time", "5");
+    property_set("persist.radio.multisim.config", "dsds");
 
     init_alarm_boot_properties();
 }
