@@ -75,7 +75,7 @@ BOARD_USES_VENDOR_QCOM := false
 BOARD_SUPPRESS_SECURE_ERASE := true
 
 # ANT+
-BOARD_ANT_WIRELESS_DEVICE := "qualcomm-uart"
+#BOARD_ANT_WIRELESS_DEVICE := "qualcomm-uart"
 
 # Audio/media
 TARGET_QCOM_AUDIO_VARIANT := caf-msm8996
