@@ -17,6 +17,7 @@
 # Overlay
 DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
 
+$(call inherit-product, device/leeco/x2/hidl.mk)
 $(call inherit-product, vendor/omni/config/phone-xxxhdpi-3072-dalvik-heap.mk)
 $(call inherit-product, vendor/omni/config/phone-xxhdpi-2048-hwui-memory.mk)
 
