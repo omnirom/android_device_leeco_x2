@@ -20,5 +20,4 @@
     <!-- core 1 and 3 will always have the same freq then 0 and 2 -->
     <string name="config_cpufreq_show_cpus">0,2</string>
     <bool name="config_has_hardware_buttons">true</bool>
-    <bool name="config_show_volumeRockerWake">true</bool>
 </resources>

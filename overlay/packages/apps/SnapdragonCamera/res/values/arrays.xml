@@ -18,5 +18,15 @@
 <!-- CameraSettings: [4640x3480, 4640x2610, 3488x3488, 3840x2160, 3264x2448, 3264x1836, 2464x2464, 1920x1080, 1440x1080, 1280x720, 1080x1080, 720x480, 640x480, 352x288, 320x240, 176x144]-->
 
 <resources>
+    <!-- Video Preferences High Frame Rate dialog box entries -->
+    <string-array name="pref_camera_hfr_entries">
+        <item>@string/pref_camera_hfr_entry_off</item>
+        <item>@string/pref_camera_hfr_entry_4x</item>
+    </string-array>
 
+    <!-- Do not localize entryvalues -->
+    <string-array name="pref_camera_hfr_entryvalues">
+        <item>@string/pref_camera_hfr_value_off</item>
+        <item>@string/pref_camera_hfr_value_4x</item>
+    </string-array>
 </resources>
