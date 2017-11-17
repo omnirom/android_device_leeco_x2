@@ -179,7 +179,6 @@ HEALTHD_ENABLE_TRICOLOR_LED := true
 
 # power hal
 TARGET_PROVIDES_POWERHAL := true
-BOARD_HAL_STATIC_LIBRARIES := libdumpstate.msm8996
 
 # CNE and DPM
 #TARGET_LDPRELOAD := libNimsWrap.so
