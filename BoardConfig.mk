@@ -203,8 +203,6 @@ TARGET_ENABLE_QC_AV_ENHANCEMENTS := true
 # Timeservice
 BOARD_USES_QC_TIME_SERVICES := true
 
-#PRODUCT_BOOT_JARS += com.qti.dpmframework dpmapi com.qti.location.sdk org.simalliance.openmobileapi
-
 # Wifi
 BOARD_HAS_QCOM_WLAN := true
 BOARD_HAS_QCOM_WLAN_SDK := true
@@ -243,7 +241,7 @@ TW_INCLUDE_NTFS_3G := true
 #TWRP_EVENT_LOGGING := true
 else
 #USE_CLANG_PLATFORM_BUILD := true
-TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/rootdir/root/fstab.qcom
+TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/rootdir/recovery/fstab.qcom
 endif
 
 # SELinux
