@@ -147,7 +147,8 @@ PRODUCT_COPY_FILES += \
 
 # Camera
 PRODUCT_PACKAGES += \
-    libshim_camera
+    libshim_camera \
+    camera.msm8996
 
 # Connectivity Engine support (CNE)
 PRODUCT_PACKAGES += \
