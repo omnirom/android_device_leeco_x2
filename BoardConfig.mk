@@ -52,6 +52,7 @@ TARGET_USES_64_BIT_BINDER := true
 
 # Kernel
 BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom user_debug=31 msm_rtb.filter=0x237 ehci-hcd.park=3 lpm_levels.sleep_disabled=1 cma=32M@0-0xffffffff
+BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
 BOARD_KERNEL_TAGS_OFFSET := 0x02000000
 BOARD_RAMDISK_OFFSET     := 0x02200000
 BOARD_KERNEL_BASE := 0x80000000
@@ -230,7 +231,7 @@ USE_SENSOR_MULTI_HAL := true
 # Timeservice
 BOARD_USES_QC_TIME_SERVICES := true
 
-PRODUCT_BOOT_JARS += com.qti.dpmframework dpmapi com.qti.location.sdk org.simalliance.openmobileapi
+#PRODUCT_BOOT_JARS += com.qti.dpmframework dpmapi com.qti.location.sdk org.simalliance.openmobileapi
 
 # Wifi
 BOARD_HAS_QCOM_WLAN := true
@@ -274,10 +275,8 @@ TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/rootdir/root/fstab.qcom
 endif
 
 # SELinux
-include device/qcom/sepolicy/sepolicy.mk
-BOARD_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy
-
-BOARD_SECCOMP_POLICY += $(BOARD_PATH)/seccomp
+#include device/qcom/sepolicy/sepolicy.mk
+#BOARD_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy
 
 # inherit from the proprietary version
 -include vendor/leeco/x2/BoardConfigVendor.mk
