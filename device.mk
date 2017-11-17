@@ -147,13 +147,7 @@ PRODUCT_COPY_FILES += \
 
 # Camera
 PRODUCT_PACKAGES += \
-    SnapdragonCamera \
-    libstlport
-
-# Shims
-PRODUCT_PACKAGES += \
-    libcamera_shim \
-    qcamera-daemon_shim
+    libshim_camera
 
 # Connectivity Engine support (CNE)
 PRODUCT_PACKAGES += \
