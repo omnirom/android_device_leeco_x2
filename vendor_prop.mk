@@ -1,9 +1,9 @@
 # Product
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.config.product=x2 \
-    ro.internal.model="Le X820" \
+    ro.internal.model=X820 \
     ro.config.le_hardware_version=HW_1.0.0 \
-    ro.display.series="Le Max2"
+    ro.display.series=LeMax2
 
 # Apical AD
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -42,3 +42,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # Radio
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.radio.multisim.config=dsds
+
+# X2 autofocus fix
+PRODUCT_PROPERTY_OVERRIDES += \
+    persist.camera.focus_fix=0
